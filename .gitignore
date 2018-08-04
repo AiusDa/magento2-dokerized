@@ -1,0 +1,4 @@
+/src/
+/logs/
+/config/mysql/lib/
+.env

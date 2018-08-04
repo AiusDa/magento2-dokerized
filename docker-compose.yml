@@ -1,0 +1,38 @@
+version: '3'
+services:
+  php:
+    container_name: magento-php
+    build: ./config/php
+    ports:
+      - 80:80
+    networks:
+      - back
+    environment:
+      - HOST_NAME=${HOST_NAME}
+    volumes:
+      - ./config/php/php.ini:/usr/local/etc/php/php.ini
+      - ./config/apache/sites-available/000-default.conf:/etc/apache2/sites-available/000-default.conf
+      - ./logs/apache/access.log:/var/log/apache2/access.log
+      - ./logs/apache/error.log:/var/log/apache2/error.log
+      - ./src:/var/www/html
+  mysql:
+    container_name: magento-mysql
+    build: ./config/mysql
+    ports:
+      - 3306:3306
+    networks:
+      - back
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+    volumes:
+      - ./config/mysql/lib:/var/lib/mysql
+  composer:
+    container_name: magento-composer
+    build: ./config/composer
+    volumes:
+      - ./src:/app
+networks:
+  back:
+    driver: bridge
+    
